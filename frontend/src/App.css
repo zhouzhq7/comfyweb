@@ -1,0 +1,36 @@
+/* src/App.css */
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  background: #333;
+  padding: 10px;
+}
+
+.navbar ul {
+  list-style: none;
+}
+
+.navbar ul li {
+  color: white;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  text-align: center;
+}
+
+.product-card h3 {
+  margin: 0.5em 0;
+}
+
+/* 添加更多样式以匹配原始 HTML 文件的外观 */
