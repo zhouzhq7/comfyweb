@@ -1,14 +1,47 @@
 // src/ProductDetail.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import Autocomplete from '@mui/material/Autocomplete';
+
+// Define a style object that will fix the size of the Box and constrain the image size
+const imageBoxStyle = {
+  width: '100%',
+  height: 200, // Set the height according to your requirements
+  borderRadius: '8px',
+  overflow: 'hidden', // Hide the overflow content
+  display: 'flex',
+  justifyContent: 'center', // Center the image horizontally
+  alignItems: 'center', // Center the image vertically
+  border: '1px dashed grey'
+};
+
+// Apply the image style
+const imageStyle = {
+  maxWidth: '100%', 
+  maxHeight: '100%',
+  objectFit: 'contain' // Prevent image distortion
+};
+
+const usualStyles = [
+  { label: 'Claude Monet'},
+  { label: 'Leonardo da Vinci'},
+  { label: 'TMichelangelo Buonarroti'},
+  { label: 'Vincent van Gogh'},
+  { label: 'Pablo Picasso'},
+  { label: "Rembrandt van Rijn"},
+  { label: 'Salvador Dalí'}
+];
 
 const ProductDetail = () => {
+  useEffect(() => {
+    document.title = "Instant ID"; // Setting the title dynamically
+  }, []);
+
   const { state } = useLocation();
   const { title, imageUrl, imageAlt, description } = state || {};
 
@@ -37,21 +70,28 @@ const ProductDetail = () => {
   };
 
   return (
-    <Box sx={{ p: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: '#121212', color: '#fff', height: '100vh' }}>
-      <Box sx={{ maxWidth: '60%' }}>
-        <Typography variant="h4" component="h1" sx={{ mb: 3 }}>
+    <Box sx={{ p: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+      <Box sx={{ maxWidth: '60%', alignItems: 'top' }}>
+        <Typography variant="h1" component="h1" sx={{ mb: 3 }}>
           {title}
         </Typography>
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          Description
+        <Typography variant="h4" sx={{ mb: 3 }}>
+          介绍
         </Typography>
-        <Typography variant="body2" sx={{ mb: 3 }}>
+        <Typography variant="body1" sx={{ mb: 3 }}>
           {description}
         </Typography>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+          <Autocomplete
+            disablePortal
+            id="styles"
+            options={usualStyles}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="艺术风格" />}
+          />
           <TextField
-            label="Prompt"
+            label="输入图片描述"
             variant="outlined"
             value={prompt}
             onChange={handlePromptChange}
@@ -73,10 +113,18 @@ const ProductDetail = () => {
                 onChange={handleImageUpload}
               />
             </Button>
-            {uploadedImage && (
-              <Box sx={{ mt: 2 }}>
-                <img src={uploadedImage} alt="Selected" style={{ width: '100%', borderRadius: '8px' }} />
-              </Box>
+          </Box>
+          <Box sx={imageBoxStyle}>
+            {uploadedImage ? (
+              <img
+                src={uploadedImage}
+                alt="uploaded"
+                style={imageStyle}
+              />
+            ) : (
+              <Typography variant="subtitle1" sx={{ color: 'grey.500' }}>
+                Please upload an image.
+              </Typography>
             )}
           </Box>
         </Box>
@@ -107,13 +155,7 @@ const ProductDetail = () => {
             />
           ))}
         </Box>
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          Custom Nodes
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          Models
-        </Typography>
-        <Button variant="outlined" color="primary" sx={{ mt: 2 }}>
+        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
           Download Workflow
         </Button>
       </Box>
